@@ -4,6 +4,12 @@
       <h1 class="title has-text-centered">WishList App</h1>
       <create-wish @create-wish="createWish"></create-wish>
       <hr>
+      <div class="has-text-centered" v-show="isLoading">
+        <span class="icon has-text-info is-medium">
+          <i class="fas fa-2x fa-spinner fa-pulse"></i>
+        </span>
+      </div>
+      <p v-show="isFail" class="subtitle has-text-centered">Can't load your wish list.</p>
       <wish-list :wishes="wishList"></wish-list>
     </div>
   </div>
@@ -22,7 +28,9 @@ export default {
   },
   data() {
     return {
-      wishList: []
+      wishList: [],
+      isLoading: true,
+      isFail: false
     };
   },
   created() {
@@ -38,9 +46,12 @@ export default {
             this.wishList[key].done = true;
           }
         }
+        this.isLoading = false;
         console.log(this.wishList);
       })
       .catch(error => {
+        this.isFail = true;
+        this.isLoading = false;
         console.log(error);
       });
   },
